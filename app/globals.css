@@ -387,3 +387,12 @@ a.c-card:hover { border-color: rgba(238,58,36,.5); transform: translateY(-4px); 
 .filters select option { background: #1a1a1f; }
 .filters select:focus, .filters input:focus { border-color: rgba(249,171,22,.7); }
 .live-bar { margin-top: 4px; }
+
+/* Fix: градієнт під прозорою рамкою (пікселі по краях) — для всіх градієнтних елементів */
+.nav a.nav-cat, .nav a.nav-cat:hover, .btn, .btn:hover, .tab, .src-tag, .avatar, .cta {
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.nav a.nav-cat { background-color: transparent; }
+.nav a.nav-cat:hover { border-color: transparent; }
