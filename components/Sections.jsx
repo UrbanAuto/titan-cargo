@@ -104,6 +104,8 @@ export function Contacts() {
           </div>
         </div>
         <div className="contact-grid" data-stagger>
+          <a className="c-card" href={`tel:${SITE.phone}`}><small>Телефон менеджера</small><b>+380 66 904 25 91</b></a>
+          <a className="c-card" href={`https://t.me/${SITE.telegram}`} target="_blank" rel="noopener noreferrer"><small>Telegram</small><b>@{SITE.telegram}</b></a>
           <a className="c-card" href={`mailto:${SITE.email}`}><small>Email</small><b>{SITE.email}</b></a>
           <div className="c-card"><small>Офіс</small><b>{SITE.address}</b></div>
           <a className="c-card" href={SITE.instagram} target="_blank" rel="noopener noreferrer"><small>Instagram</small><b>@titan.cargo.ukraine</b></a>
@@ -119,6 +121,7 @@ export function Footer() {
       <div className="container footer-in">
         <img src={`${BASE}/img/logo-line.png`} alt="Titan Cargo" />
         <div className="socials">
+          <a href={`https://t.me/${SITE.telegram}`} target="_blank" rel="noopener noreferrer">Telegram</a>
           <a href={SITE.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href={SITE.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
           <a href={SITE.tiktok} target="_blank" rel="noopener noreferrer">TikTok</a>
