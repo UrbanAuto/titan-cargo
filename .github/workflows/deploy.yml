@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
 permissions:
   contents: read
   pages: write
@@ -20,6 +22,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Оновити лоти (Apibara)
+        run: node scripts/fetch-cars.mjs
+        env:
+          APIBARA_KEY: ${{ secrets.APIBARA_KEY }}
       - run: npm run build
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
