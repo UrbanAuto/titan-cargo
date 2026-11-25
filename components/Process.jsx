@@ -27,8 +27,11 @@ export default function Process() {
     gsap.set(live, { strokeDasharray: L, strokeDashoffset: L });
     const steps = gsap.utils.toArray('.step', root.current);
     const place = (p) => {
-      const pt = path.getPointAtLength(L * p); const box = path.ownerSVGElement.getBoundingClientRect();
-      gsap.set(truckRef.current, { x: (pt.x / 480) * box.width, y: (pt.y / 380) * box.height });
+      const pt = path.getPointAtLength(L * p);
+      const svg = path.ownerSVGElement; const box = svg.getBoundingClientRect();
+      const m = path.getScreenCTM();
+      const s = new DOMPoint(pt.x, pt.y).matrixTransform(m); // враховує «meet»-відступи SVG
+      gsap.set(truckRef.current, { x: s.x - box.left, y: s.y - box.top });
       gsap.set(live, { strokeDashoffset: L * (1 - p) });
     };
     place(0);

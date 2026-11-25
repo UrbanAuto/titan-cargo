@@ -21,7 +21,7 @@ export default function Catalog() {
           {list.map((c) => <CarCard key={c.id} c={c} onOpen={setOpen} />)}
         </div>
         <div style={{ textAlign: 'center', marginTop: 44 }} data-reveal>
-          <a className="btn btn-fire" href={`${BASE}/catalog/`}>Усі автомобілі ({data.cars.length}) →</a>
+          <a className="btn btn-fire" href={`${BASE}/catalog/`}>Усі автомобілі →</a>
         </div>
       </div>
       {open && <LotModal car={open} onClose={() => setOpen(null)} />}
