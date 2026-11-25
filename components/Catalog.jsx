@@ -4,6 +4,7 @@ import { CARS as FALLBACK, COUNTRIES, MAKES } from '@/lib/data';
 import { goTo } from '@/lib/scroll';
 import CarSvg from './CarSvg';
 import LotModal from './LotModal';
+import { managerLink } from '@/lib/contact';
 
 const fmt = (n) => n.toLocaleString('uk-UA');
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -88,7 +89,10 @@ export default function Catalog({ filters, setFilters }) {
                 )}
                 <div className="car-foot">
                   <div className="price"><small>поточна ставка</small><b>${fmt(c.bid)}</b></div>
-                  <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); setOpen(c); }}>Детальніше</button>
+                  <div className="car-btns">
+                    <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); setOpen(c); }}>Детальніше</button>
+                    <a className="btn btn-fire btn-sm" href={managerLink(c).href} onClick={(e) => e.stopPropagation()} {...(managerLink(c).external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>Менеджер</a>
+                  </div>
                 </div>
               </div>
             </article>

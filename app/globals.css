@@ -362,3 +362,6 @@ a.c-card:hover { border-color: rgba(238,58,36,.5); transform: translateY(-4px); 
   .stage { min-height: 0; aspect-ratio: 4/3; flex: none; } .stage > img { max-height: none; }
   .modal-info { overflow: visible; }
 }
+
+.car-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.m-actions a.btn { text-align: center; }
