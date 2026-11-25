@@ -6,7 +6,7 @@ import Catalog from './Catalog';
 import Order from './Order';
 import Calculator from './Calculator';
 import Process from './Process';
-import { Marquee, Stats, Auctions, Reviews, Contacts, Footer } from './Sections';
+import { Marquee, Stats, SoldTeaser, Auctions, Reviews, Contacts, Footer } from './Sections';
 
 export default function Site() {
   const search = (f) => {
@@ -23,6 +23,7 @@ export default function Site() {
         <Marquee />
         <Stats />
         <Catalog />
+        <SoldTeaser />
         <Order />
         <Calculator />
         <Process />

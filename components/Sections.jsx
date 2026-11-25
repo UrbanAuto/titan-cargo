@@ -4,6 +4,27 @@ import { goTo } from '@/lib/scroll';
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
+export function SoldTeaser() {
+  const go = (e) => { e.preventDefault(); const v = new FormData(e.currentTarget).get('q'); window.location.href = `${BASE}/sold/${v ? `?q=${encodeURIComponent(v)}` : ''}`; };
+  return (
+    <section className="section" style={{ padding: 'clamp(40px, 6vw, 80px) 0' }}>
+      <div className="container">
+        <div className="teaser" data-reveal>
+          <div>
+            <span className="eyebrow">Історія продажів</span>
+            <h2 className="h2" style={{ marginBottom: 10 }}>За скільки <span className="grad">продали це авто?</span></h2>
+            <p className="lead">Введіть VIN або номер лота Copart чи IAAI — покажемо ціну продажу, дату й локацію.</p>
+          </div>
+          <form className="vin-form" onSubmit={go}>
+            <input name="q" placeholder="VIN чи № лота …" aria-label="VIN або номер лота" autoCapitalize="characters" spellCheck="false" />
+            <button type="submit" aria-label="Шукати"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg></button>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Marquee() {
   const items = ['США', 'Канада', 'Європа', 'Copart', 'IAAI', 'Manheim', 'Підбір під ключ', 'Розмитнення', 'Доставка'];
   return (

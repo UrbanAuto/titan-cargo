@@ -422,3 +422,31 @@ a.c-card:hover { border-color: rgba(238,58,36,.5); transform: translateY(-4px); 
 }
 
 @media (max-width: 720px) { .truck { width: 34px; height: 34px; margin: -17px 0 0 -17px; box-shadow: 0 0 0 4px rgba(238,58,36,.2), 0 6px 18px rgba(238,58,36,.55); } .truck svg { width: 18px; } }
+
+/* Пошук проданих лотів */
+.vin-form { display: flex; width: 100%; max-width: 560px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 20px 50px -25px rgba(0,0,0,.7); }
+.vin-form input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 18px 20px; font-size: 18px; color: #1b1b1f; background: transparent; text-transform: uppercase; }
+.vin-form input::placeholder { color: #8a8a90; text-transform: none; }
+.vin-form button { width: 78px; border: 0; cursor: pointer; background: var(--red-d); color: #fff; display: grid; place-items: center; transition: background .3s; }
+.vin-form button:hover { background: var(--red); }
+.vin-form .spin { width: 22px; height: 22px; border-radius: 50%; border: 3px solid rgba(255,255,255,.4); border-top-color: #fff; animation: spin .8s linear infinite; }
+.vin-msg { margin-top: 18px; padding: 14px 18px; border-radius: 14px; background: rgba(238,58,36,.1); border: 1px solid rgba(238,58,36,.4); color: #ffb4a8; }
+.teaser { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; padding: clamp(28px, 4vw, 52px); border-radius: 28px; background: var(--card); border: 1px solid var(--line); position: relative; overflow: hidden; }
+.teaser::before { content: ''; position: absolute; width: 380px; height: 380px; right: -120px; top: -160px; background: radial-gradient(circle, rgba(238,58,36,.25), transparent 70%); }
+.teaser > * { position: relative; }
+.sold-card { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 26px; overflow: hidden; background: var(--card); border: 1px solid var(--line); }
+.sold-photo { position: relative; min-height: 300px; background: #0c0c0f; }
+.sold-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sold-noimg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
+.sold-photo .pill { position: absolute; top: 14px; left: 14px; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 13px; background: rgba(10,10,12,.75); border: 1px solid var(--line); }
+.pill.ok { color: #6ee7a8; border-color: rgba(61,220,132,.5) !important; } .pill.bad { color: #ff9a8a; border-color: rgba(238,58,36,.6) !important; } .pill.warn { color: var(--amber); }
+.sold-photo .pill.demo { left: auto; right: 14px; color: var(--amber); }
+.sold-photo .count { position: absolute; left: 14px; bottom: 14px; padding: 5px 12px; border-radius: 999px; background: rgba(10,10,12,.7); font-size: 13px; }
+.sold-info { padding: 30px 28px; display: flex; flex-direction: column; gap: 14px; }
+.sold-info h3 { font-family: var(--font-display); font-size: clamp(20px, 2.3vw, 28px); line-height: 1.2; }
+.sold-price small { display: block; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+.sold-price b { font-family: var(--font-display); font-size: 40px; }
+.sold-price em { display: block; color: #ff9a8a; font-size: 13px; font-style: normal; }
+.sold-info dl div { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 14.5px; }
+.sold-info dt { color: var(--muted); } .sold-info dd { text-align: right; font-weight: 500; word-break: break-all; }
+@media (max-width: 860px) { .teaser { grid-template-columns: 1fr; gap: 24px; } .sold-card { grid-template-columns: 1fr; } .sold-photo { min-height: 240px; } .vin-form { max-width: none; } }

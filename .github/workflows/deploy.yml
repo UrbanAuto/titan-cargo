@@ -27,6 +27,8 @@ jobs:
         env:
           APIBARA_KEY: ${{ secrets.APIBARA_KEY }}
       - run: npm run build
+        env:
+          NEXT_PUBLIC_SOLD_API: ${{ vars.SOLD_API_URL }}
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

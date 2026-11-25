@@ -9,7 +9,7 @@ const fmt = (n) => n.toLocaleString('uk-UA');
 const FLAG = { usa: '🇺🇸', canada: '🇨🇦', europe: '🇪🇺' };
 const CNAME = { usa: 'США', canada: 'Канада', europe: 'Європа' };
 
-export default function LotModal({ car, onClose }) {
+export default function LotModal({ car, onClose, priceLabel = 'Поточна ставка' }) {
   const imgs = car.images?.length ? car.images : car.image ? [car.image] : [];
   const [i, setI] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -74,7 +74,7 @@ export default function LotModal({ car, onClose }) {
         <div className="modal-info">
           <span className="src-line">{FLAG[car.country]} {CNAME[car.country]} · аукціон {car.auction}</span>
           <h3>{car.year} {car.make} {car.model}</h3>
-          <div className="m-price"><small>Поточна ставка</small><b>${fmt(car.bid)}</b></div>
+          <div className="m-price"><small>{priceLabel}</small><b>${fmt(car.bid)}</b></div>
           <dl>{rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
           <div className="m-actions">
             <a className="btn btn-fire" href={mgr.href} {...(mgr.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>💬 Зв’язатися з менеджером</a>
