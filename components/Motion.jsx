@@ -28,9 +28,12 @@ export default function Motion() {
 
       if (reduce) return;
 
+      const hasHero = !!document.querySelector('.hero');
       // Hero intro (split lines)
+      if (hasHero) {
       gsap.from('.hero h1 .line > span', { yPercent: 115, duration: 1.2, ease: 'power4.out', stagger: 0.12, delay: 0.15 });
       gsap.from('.hero-intro', { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.12, delay: 0.6 });
+      }
 
       // Reveal animations
       const reveal = (sel, from) => gsap.utils.toArray(sel).forEach((el) => {
@@ -50,11 +53,13 @@ export default function Motion() {
         const speed = parseFloat(el.dataset.parallax);
         gsap.to(el, { yPercent: speed * 100, ease: 'none', scrollTrigger: { trigger: el.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
       });
+      if (hasHero) {
       gsap.to('.hero-mark', { yPercent: -18, rotate: 4, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.hero-in', { yPercent: -12, opacity: 0.2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'center top', end: 'bottom top', scrub: true } });
+      }
 
       // Marquee scroll-driven
-      gsap.to('.marquee-track', { xPercent: -30, ease: 'none', scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+      if (document.querySelector('.marquee')) gsap.to('.marquee-track', { xPercent: -30, ease: 'none', scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
 
       // Counters
       gsap.utils.toArray('[data-count]').forEach((el) => {

@@ -1,109 +1,28 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { CARS as FALLBACK, COUNTRIES, MAKES } from '@/lib/data';
-import { goTo } from '@/lib/scroll';
-import CarSvg from './CarSvg';
+import { useState } from 'react';
+import { useCars } from '@/lib/useCars';
+import CarCard from './CarCard';
 import LotModal from './LotModal';
-import { managerLink } from '@/lib/contact';
 
-const fmt = (n) => n.toLocaleString('uk-UA');
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
-const FLAG = { usa: '🇺🇸', canada: '🇨🇦', europe: '🇪🇺' };
-const CNAME = { usa: 'США', canada: 'Канада', europe: 'Європа' };
-const AUCTIONS = [['all', 'Усі аукціони'], ['copart', 'Copart'], ['iaai', 'IAAI'], ['europe', 'Європа']];
-const PAGE = 20;
-const EU = ['autoscout24', 'mobile.de'];
 
-const normalize = (c) => ({ ...c, bid: c.bid ?? c.price, damage: c.damage ?? null, location: c.location ?? null, saleDate: c.saleDate ?? null });
-const dateUa = (d) => new Date(d).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
-
-export default function Catalog({ filters, setFilters }) {
-  const [data, setData] = useState({ cars: FALLBACK.map(normalize), updated: null, source: 'demo' });
-  const [auction, setAuction] = useState('all');
-  const [visible, setVisible] = useState(PAGE);
+/** Вітрина на головній: свіжі лоти + перехід до повного каталогу з пошуком. */
+export default function Catalog() {
+  const data = useCars();
   const [open, setOpen] = useState(null);
-
-  useEffect(() => {
-    fetch(`${BASE}/data/cars.json`, { cache: 'no-store' })
-      .then((r) => r.json())
-      .then((j) => setData({ ...j, cars: j.cars.map(normalize) }))
-      .catch(() => {});
-  }, []);
-
-  const match = (c) => {
-    const a = c.auction.toLowerCase();
-    return (
-      (auction === 'all' || (auction === 'europe' ? EU.includes(a) : a.includes(auction))) &&
-      (!filters.make || c.make === filters.make) &&
-      (filters.country === 'all' || c.country === filters.country) &&
-      (!filters.year || c.year >= +filters.year) &&
-      (!filters.budget || c.bid <= +filters.budget)
-    );
-  };
-  const all = data.cars.filter(match);
-  const list = all.slice(0, visible);
-  const filterKey = `${filters.country}${filters.make}${filters.year}${filters.budget}${auction}`;
-  useEffect(() => { setVisible(PAGE); }, [filterKey]);
-  const set = (k, v) => setFilters({ ...filters, [k]: v });
-
+  const list = [...data.cars].sort((a, b) => (a.saleDate || '9999').localeCompare(b.saleDate || '9999')).slice(0, 6);
   return (
     <section className="section" id="catalog">
       <div className="container">
         <span className="eyebrow" data-reveal>Каталог</span>
-        <h2 className="h2" data-reveal>Актуальні лоти <span className="grad">з аукціонів</span></h2>
-        <p className="lead" data-reveal>Ставка — поточна ціна на аукціоні. Остаточну вартість «під ключ» розрахуємо в калькуляторі або разом із менеджером.</p>
-        <div className="tabs" data-reveal>
-          {COUNTRIES.map((c) => <button key={c.id} className={`tab ${filters.country === c.id ? 'active' : ''}`} onClick={() => set('country', c.id)}>{c.label}</button>)}
-          <select className="tab" value={auction} onChange={(e) => setAuction(e.target.value)} aria-label="Аукціон" style={{ background: '#15151a' }}>
-            {AUCTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-          <select className="tab" value={filters.make} onChange={(e) => set('make', e.target.value)} aria-label="Марка" style={{ background: '#15151a' }}>
-            <option value="">Усі марки</option>{MAKES.map((m) => <option key={m}>{m}</option>)}
-          </select>
+        <h2 className="h2" data-reveal>Найближчі торги <span className="grad">на аукціонах</span></h2>
+        <p className="lead" data-reveal>Підбірка лотів Copart та IAAI з найближчою датою торгів. Весь каталог із пошуком і фільтрами — на окремій сторінці.</p>
+        <div className="cars" style={{ marginTop: 40 }} data-stagger>
+          {list.map((c) => <CarCard key={c.id} c={c} onOpen={setOpen} />)}
         </div>
-        <div className="live-bar" data-reveal>
-          <span className={`dot ${data.source === 'demo' ? 'demo' : ''}`} />
-          {data.source === 'demo' ? 'Демо-дані' : 'Дані аукціонів'}
-          {data.updated && <> · оновлено {new Date(data.updated).toLocaleString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</>}
-          <b>{all.length} лотів</b>
+        <div style={{ textAlign: 'center', marginTop: 44 }} data-reveal>
+          <a className="btn btn-fire" href={`${BASE}/catalog/`}>Усі автомобілі ({data.cars.length}) →</a>
         </div>
-        <div className="cars" key={`${filterKey}${data.cars.length}`} data-stagger>
-          {list.length === 0 && <div className="empty">За вашим запитом лотів не знайдено. Залиште заявку — підберемо індивідуально.</div>}
-          {list.map((c) => (
-            <article className="car" key={c.id} onClick={() => setOpen(c)} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setOpen(c)}>
-              <div className="car-visual">
-                {c.image ? <img src={c.images?.[0] || c.image} alt={`${c.make} ${c.model}`} loading="lazy" className="car-photo" /> : <CarSvg id={`k${c.id}`} body={c.body} />}
-                <span className="badge src">{FLAG[c.country]} {c.auction}</span>
-                <span className="badge r">{c.year}</span>
-                {c.saleDate && <span className="badge b">Торги {dateUa(c.saleDate)}</span>}
-              </div>
-              <div className="car-body">
-                <h3>{c.make} {c.model}</h3>
-                <div className="car-meta">{c.km > 0 && <span>{fmt(c.km)} км</span>}{[c.fuel, c.engine, c.body].filter((v) => v && v !== '—').map((v) => <span key={v}>{v}</span>)}</div>
-                {(c.damage || c.location) && (
-                  <div className="lot-info">
-                    {c.damage && <span>⚠ {c.damage}</span>}
-                    {c.location && <span>📍 {c.location}</span>}
-                    {c.lot && <span>Лот № {c.lot}</span>}
-                  </div>
-                )}
-                <div className="car-foot">
-                  <div className="price"><small>поточна ставка</small><b>${fmt(c.bid)}</b></div>
-                  <div className="car-btns">
-                    <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); setOpen(c); }}>Детальніше</button>
-                    <a className="btn btn-fire btn-sm" href={managerLink(c).href} onClick={(e) => e.stopPropagation()} {...(managerLink(c).external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>Менеджер</a>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-        {all.length > visible && (
-          <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <button className="btn" onClick={() => setVisible((v) => v + PAGE)}>Показати ще ({Math.min(PAGE, all.length - visible)}) · ще {all.length - visible} лотів</button>
-          </div>
-        )}
-        <p className="note" data-reveal>* Показано демонстраційні лоти. Після підключення джерела даних тут з'являться актуальні пропозиції з аукціонів.</p>
       </div>
       {open && <LotModal car={open} onClose={() => setOpen(null)} />}
     </section>
