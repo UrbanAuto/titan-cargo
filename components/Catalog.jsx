@@ -10,7 +10,7 @@ const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 export default function Catalog() {
   const data = useCars();
   const [open, setOpen] = useState(null);
-  const list = [...data.cars].sort((a, b) => (a.saleDate || '9999').localeCompare(b.saleDate || '9999')).slice(0, 6);
+  const list = [...data.cars].sort((a, b) => (a.saleDate || '9999').localeCompare(b.saleDate || '9999')).slice(0, 3);
   return (
     <section className="section" id="catalog">
       <div className="container">
