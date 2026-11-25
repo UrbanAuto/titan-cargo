@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { CARS as FALLBACK, COUNTRIES, MAKES } from '@/lib/data';
 import { goTo } from '@/lib/scroll';
 import CarSvg from './CarSvg';
+import LotModal from './LotModal';
 
 const fmt = (n) => n.toLocaleString('uk-UA');
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const FLAG = { usa: '🇺🇸', canada: '🇨🇦', europe: '🇪🇺' };
 const CNAME = { usa: 'США', canada: 'Канада', europe: 'Європа' };
 const AUCTIONS = [['all', 'Усі аукціони'], ['copart', 'Copart'], ['iaai', 'IAAI'], ['europe', 'Європа']];
 const PAGE = 20;
@@ -18,6 +20,7 @@ export default function Catalog({ filters, setFilters }) {
   const [data, setData] = useState({ cars: FALLBACK.map(normalize), updated: null, source: 'demo' });
   const [auction, setAuction] = useState('all');
   const [visible, setVisible] = useState(PAGE);
+  const [open, setOpen] = useState(null);
 
   useEffect(() => {
     fetch(`${BASE}/data/cars.json`, { cache: 'no-store' })
@@ -66,10 +69,10 @@ export default function Catalog({ filters, setFilters }) {
         <div className="cars" key={`${filterKey}${data.cars.length}`} data-stagger>
           {list.length === 0 && <div className="empty">За вашим запитом лотів не знайдено. Залиште заявку — підберемо індивідуально.</div>}
           {list.map((c) => (
-            <article className="car" key={c.id}>
+            <article className="car" key={c.id} onClick={() => setOpen(c)} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setOpen(c)}>
               <div className="car-visual">
-                {c.image ? <img src={c.image} alt={`${c.make} ${c.model}`} loading="lazy" className="car-photo" /> : <CarSvg id={`k${c.id}`} body={c.body} />}
-                <span className="badge">{CNAME[c.country]} · {c.auction}</span>
+                {c.image ? <img src={c.images?.[0] || c.image} alt={`${c.make} ${c.model}`} loading="lazy" className="car-photo" /> : <CarSvg id={`k${c.id}`} body={c.body} />}
+                <span className="badge src">{FLAG[c.country]} {c.auction}</span>
                 <span className="badge r">{c.year}</span>
                 {c.saleDate && <span className="badge b">Торги {dateUa(c.saleDate)}</span>}
               </div>
@@ -85,7 +88,7 @@ export default function Catalog({ filters, setFilters }) {
                 )}
                 <div className="car-foot">
                   <div className="price"><small>поточна ставка</small><b>${fmt(c.bid)}</b></div>
-                  <button className="btn btn-sm" onClick={() => goTo('calc')}>Розрахувати</button>
+                  <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); setOpen(c); }}>Детальніше</button>
                 </div>
               </div>
             </article>
@@ -98,6 +101,7 @@ export default function Catalog({ filters, setFilters }) {
         )}
         <p className="note" data-reveal>* Показано демонстраційні лоти. Після підключення джерела даних тут з'являться актуальні пропозиції з аукціонів.</p>
       </div>
+      {open && <LotModal car={open} onClose={() => setOpen(null)} />}
     </section>
   );
 }

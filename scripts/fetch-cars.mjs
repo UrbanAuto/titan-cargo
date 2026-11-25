@@ -22,6 +22,8 @@ export function mapLot(r) {
   const bid = r.pricing?.current_bid_usd ?? r.current_bid ?? 0;
   const photo = r.media?.items?.find((i) => i.type === 'image')?.large ?? r.media?.thumbs?.[0] ?? (Array.isArray(r.photos) ? r.photos[0] : null);
   const timed = r.auction?.is_timed === true;
+  const fromItems = (r.media?.items || []).filter((i) => i.type === 'image').map((i) => i.large || i.full || i.thumb).filter(Boolean);
+  const images = [...new Set(fromItems.length ? fromItems : r.media?.thumbs || [])].slice(0, 20);
   const date = (timed ? r.auction?.timed_end_at : null) ?? r.auction?.auction_at ?? r.auction_date ?? null;
   const country = /canada|\((ON|QC|BC|AB|MB|NS|NB|SK|NL|PE)\)|,\s*(ON|QC|BC|AB|MB|NS|NB)\b|^(ON|QC|BC|AB|MB|NS|NB)\s*-/i.test(String(loc)) ? 'canada' : 'usa';
   return {
@@ -42,11 +44,12 @@ export function mapLot(r) {
     saleDate: date ? String(date).slice(0, 10) : null,
     timed,
     image: photo,
+    images: images.length ? images : photo ? [photo] : [],
   };
 }
 
 async function load(platform) {
-  const qs = new URLSearchParams({ platform, lot_status: 'Open', year_from: String(YEAR_FROM), sort: 'auction_soonest', view: 'summary', per_page: String(PER_PAGE) });
+  const qs = new URLSearchParams({ platform, lot_status: 'Open', year_from: String(YEAR_FROM), sort: 'auction_soonest', per_page: String(PER_PAGE) });
   const res = await fetch(`${BASE}/vehicles?${qs}`, { headers: { 'X-API-Key': KEY, Accept: 'application/json' } });
   console.log(platform, res.status, 'remaining:', res.headers.get('X-Subscription-Remaining'));
   if (!res.ok) throw new Error(`${platform}: HTTP ${res.status}`);
