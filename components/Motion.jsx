@@ -65,10 +65,18 @@ export default function Motion() {
       });
     });
 
+    // Перерахунок позицій, коли змінюється висота сторінки (каталог, шрифти, «Показати ще»)
+    let t; let lastH = document.body.scrollHeight;
+    const ro = new ResizeObserver(() => {
+      if (Math.abs(document.body.scrollHeight - lastH) < 4) return;
+      lastH = document.body.scrollHeight; clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 200);
+    });
+    ro.observe(document.body);
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener('load', onLoad);
     return () => {
       window.removeEventListener('load', onLoad);
+      ro.disconnect(); clearTimeout(t);
       ctx.revert();
       lenis?.destroy();
       window.__lenis = undefined;

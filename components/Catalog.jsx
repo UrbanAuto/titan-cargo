@@ -8,6 +8,7 @@ const fmt = (n) => n.toLocaleString('uk-UA');
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 const CNAME = { usa: 'США', canada: 'Канада', europe: 'Європа' };
 const AUCTIONS = [['all', 'Усі аукціони'], ['copart', 'Copart'], ['iaai', 'IAAI'], ['europe', 'Європа']];
+const PAGE = 20;
 const EU = ['autoscout24', 'mobile.de'];
 
 const normalize = (c) => ({ ...c, bid: c.bid ?? c.price, damage: c.damage ?? null, location: c.location ?? null, saleDate: c.saleDate ?? null });
@@ -16,6 +17,7 @@ const dateUa = (d) => new Date(d).toLocaleDateString('uk-UA', { day: 'numeric', 
 export default function Catalog({ filters, setFilters }) {
   const [data, setData] = useState({ cars: FALLBACK.map(normalize), updated: null, source: 'demo' });
   const [auction, setAuction] = useState('all');
+  const [visible, setVisible] = useState(PAGE);
 
   useEffect(() => {
     fetch(`${BASE}/data/cars.json`, { cache: 'no-store' })
@@ -34,7 +36,10 @@ export default function Catalog({ filters, setFilters }) {
       (!filters.budget || c.bid <= +filters.budget)
     );
   };
-  const list = data.cars.filter(match);
+  const all = data.cars.filter(match);
+  const list = all.slice(0, visible);
+  const filterKey = `${filters.country}${filters.make}${filters.year}${filters.budget}${auction}`;
+  useEffect(() => { setVisible(PAGE); }, [filterKey]);
   const set = (k, v) => setFilters({ ...filters, [k]: v });
 
   return (
@@ -56,9 +61,9 @@ export default function Catalog({ filters, setFilters }) {
           <span className={`dot ${data.source === 'demo' ? 'demo' : ''}`} />
           {data.source === 'demo' ? 'Демо-дані' : 'Дані аукціонів'}
           {data.updated && <> · оновлено {new Date(data.updated).toLocaleString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</>}
-          <b>{list.length} лотів</b>
+          <b>{all.length} лотів</b>
         </div>
-        <div className="cars" key={`${filters.country}${filters.make}${filters.year}${filters.budget}${auction}${data.cars.length}`} data-stagger>
+        <div className="cars" key={`${filterKey}${data.cars.length}`} data-stagger>
           {list.length === 0 && <div className="empty">За вашим запитом лотів не знайдено. Залиште заявку — підберемо індивідуально.</div>}
           {list.map((c) => (
             <article className="car" key={c.id}>
@@ -86,6 +91,11 @@ export default function Catalog({ filters, setFilters }) {
             </article>
           ))}
         </div>
+        {all.length > visible && (
+          <div style={{ textAlign: 'center', marginTop: 40 }}>
+            <button className="btn" onClick={() => setVisible((v) => v + PAGE)}>Показати ще ({Math.min(PAGE, all.length - visible)}) · ще {all.length - visible} лотів</button>
+          </div>
+        )}
         <p className="note" data-reveal>* Показано демонстраційні лоти. Після підключення джерела даних тут з'являться актуальні пропозиції з аукціонів.</p>
       </div>
     </section>
