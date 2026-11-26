@@ -31,6 +31,7 @@ export default function Header({ home = true }) {
       <div className={`mobile-menu ${open ? 'open' : ''}`}>
         {NAV.map((n) => <a key={n.id} className="m-link" href={href(n)} onClick={(e) => click(e, n)}>{n.label}</a>)}
         <a className="btn btn-fire" href={SITE.cabinetUrl} target="_blank" rel="noopener noreferrer">Особистий кабінет ↗</a>
+        <a className="btn" href={`https://t.me/${SITE.telegram}`} target="_blank" rel="noopener noreferrer">Написати менеджеру</a>
       </div>
     </>
   );

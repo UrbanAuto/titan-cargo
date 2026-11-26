@@ -1,6 +1,7 @@
 'use client';
 import { AUCTIONS, REVIEWS, FAQ, SITE } from '@/lib/data';
 import { goTo } from '@/lib/scroll';
+import { telegramLink } from '@/lib/contact';
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
@@ -99,7 +100,7 @@ export function Contacts() {
           <h2 className="h2">Готові привезти авто мрії?</h2>
           <p>Залиште заявку або зайдіть в особистий кабінет, щоб побачити статус вашого замовлення.</p>
           <div className="hero-cta" style={{ justifyContent: 'center' }}>
-            <button className="btn" onClick={() => goTo('order')}>Залишити заявку</button>
+            <a className="btn" href={telegramLink('Доброго дня! Хочу залишити заявку на пригін авто.')} target="_blank" rel="noopener noreferrer">Написати менеджеру</a>
             <a className="btn" href={SITE.cabinetUrl} target="_blank" rel="noopener noreferrer">Особистий кабінет ↗</a>
           </div>
         </div>

@@ -61,7 +61,7 @@ export default function SoldSearch({ initial = '' }) {
             </dl>
             <div className="m-actions">
               <button className="btn btn-fire" onClick={() => goTo('calc')}>Розрахувати «під ключ»</button>
-              <a className="btn" href={managerLink(car).href}>Запитати менеджера</a>
+              <a className="btn" target="_blank" rel="noopener noreferrer" href={managerLink(car, d.salePrice != null ? 'Цікавить авто, що було продано' : 'Цікавить лот').href}>Запитати менеджера</a>
             </div>
           </div>
         </article>

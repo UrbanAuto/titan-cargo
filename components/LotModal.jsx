@@ -34,7 +34,6 @@ export default function LotModal({ car, onClose, priceLabel = 'Поточна с
     if (document.fullscreenElement) document.exitFullscreen();
     else el?.requestFullscreen?.().catch(() => {});
   };
-  const order = () => { onClose(); setTimeout(() => goTo('order'), 150); };
   const calc = () => { onClose(); setTimeout(() => goTo('calc'), 150); };
 
   const mgr = managerLink(car);
@@ -77,8 +76,8 @@ export default function LotModal({ car, onClose, priceLabel = 'Поточна с
           <div className="m-price"><small>{priceLabel}</small><b>${fmt(car.bid)}</b></div>
           <dl>{rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
           <div className="m-actions">
-            <a className="btn btn-fire" href={mgr.href} {...(mgr.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>💬 Зв’язатися з менеджером</a>
-            <button className="btn" onClick={order}>Замовити цей лот</button>
+            <a className="btn btn-fire" href={mgr.href} target="_blank" rel="noopener noreferrer">💬 Зв’язатися з менеджером</a>
+            <a className="btn" href={managerLink(car, 'Хочу замовити лот').href} target="_blank" rel="noopener noreferrer">Замовити цей лот</a>
             <button className="btn" onClick={calc}>Розрахувати «під ключ»</button>
           </div>
           <p className="note">Ставка — поточна на аукціоні, остаточна вартість залежить від торгів.</p>

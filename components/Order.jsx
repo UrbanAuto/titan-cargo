@@ -1,14 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { MAKES, SITE } from '@/lib/data';
+import { telegramLink } from '@/lib/contact';
 
 export default function Order() {
   const [sent, setSent] = useState(false);
   const submit = (e) => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(e.currentTarget));
-    const body = `Імʼя: ${d.name}\nТелефон: ${d.phone}\nМарка/модель: ${d.make} ${d.model}\nКраїна: ${d.country}\nБюджет до: $${d.budget}\nРік від: ${d.year}\nКоментар: ${d.note}`;
-    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent('Заявка на підбір авто')}&body=${encodeURIComponent(body)}`;
+    const text = `Доброго дня! Заявка на підбір авто з сайту Titan Cargo.\nІм’я: ${d.name}\nТелефон: ${d.phone}\nАвто: ${[d.make, d.model].filter(Boolean).join(' ') || 'будь-яке'}\nКраїна: ${d.country}\nРік від: ${d.year || '—'}\nБюджет «під ключ» до: ${d.budget ? '$' + d.budget : '—'}\nПобажання: ${d.note || '—'}`;
+    window.open(telegramLink(text), '_blank', 'noopener');
     setSent(true);
   };
   return (
@@ -34,9 +35,9 @@ export default function Order() {
             <div className="input"><label>Рік від</label><input name="year" type="number" min="2005" max="2030" placeholder="2019" /></div>
             <div className="input full"><label>Бюджет «під ключ» до, $</label><input name="budget" type="number" min="0" step="500" placeholder="25000" /></div>
             <div className="input full"><label>Побажання</label><textarea name="note" placeholder="Колір, привід, комплектація…" /></div>
-            <button className="btn btn-fire full" type="submit">Надіслати заявку</button>
+            <button className="btn btn-fire full" type="submit">Надіслати менеджеру в Telegram</button>
           </div>
-          {sent && <div className="ok">Відкрито поштовий клієнт із готовою заявкою. Якщо цього не сталося — напишіть нам на {SITE.email}.</div>}
+          {sent && <div className="ok">Відкрито Telegram менеджера з готовою заявкою: натисніть «Надіслати». Якщо не відкрилось — напишіть @{SITE.telegram} або зателефонуйте {SITE.phone}.</div>}
         </form>
       </div>
     </section>

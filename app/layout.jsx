@@ -1,23 +1,32 @@
 import './globals.css';
-import { Unbounded, Manrope } from 'next/font/google';
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/manrope';
+import { ORIGIN, BASE, INDEXABLE, TITLE, DESCRIPTION, KEYWORDS, orgJsonLd, pageMeta } from '@/lib/seo';
+import FloatingContact from '@/components/FloatingContact';
 
-const display = Unbounded({ subsets: ['latin', 'cyrillic'], variable: '--f-display', weight: ['500', '600', '700', '800'], display: 'swap' });
-const body = Manrope({ subsets: ['latin', 'cyrillic'], variable: '--f-body', display: 'swap' });
 
 export const metadata = {
-  title: 'Titan Cargo — пригін авто зі США, Канади та Європи',
-  description: 'Підбір, викуп на аукціонах Copart та IAAI, доставка і розмитнення авто під ключ. Калькулятор вартості та особистий кабінет.',
-  icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/img/logo-stacked.png` },
+  metadataBase: new URL(ORIGIN),
+  applicationName: 'Titan Cargo',
+  keywords: KEYWORDS,
+  authors: [{ name: 'Titan Cargo' }],
+  ...pageMeta({ title: TITLE, description: DESCRIPTION, path: '/' }),
+  title: { default: TITLE, template: '%s' },
+  robots: INDEXABLE ? { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } } : { index: false, follow: false },
+  icons: { icon: [{ url: `${BASE}/icon.png`, type: 'image/png' }], apple: `${BASE}/apple-icon.png` },
+  formatDetection: { telephone: true },
 };
 
-export const viewport = { themeColor: '#0a0a0c' };
+export const viewport = { themeColor: '#0a0a0c', width: 'device-width', initialScale: 1 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="uk" suppressHydrationWarning className={`${display.variable} ${body.variable}`}>
+    <html lang="uk" suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd()) }} />
         {children}
+        <FloatingContact />
       </body>
     </html>
   );

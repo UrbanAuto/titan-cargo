@@ -30,7 +30,7 @@ export default function CarCard({ c, onOpen }) {
           <div className="price"><small>поточна ставка</small><b>${fmt(c.bid)}</b></div>
           <div className="car-btns">
             <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); onOpen(c); }}>Детальніше</button>
-            <a className="btn btn-fire btn-sm" href={mgr.href} onClick={(e) => e.stopPropagation()} {...(mgr.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>Менеджер</a>
+            <a className="btn btn-fire btn-sm" href={mgr.href} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer">Менеджер</a>
           </div>
         </div>
       </div>

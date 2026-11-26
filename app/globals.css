@@ -12,8 +12,8 @@
   --fire: linear-gradient(100deg, #b22222 0%, #ee3a24 28%, #f26d21 62%, #f9ab16 100%);
   --fire-soft: linear-gradient(100deg, rgba(178,34,34,.22), rgba(249,171,22,.14));
   --radius: 20px;
-  --font-display: var(--f-display), system-ui, sans-serif;
-  --font-body: var(--f-body), system-ui, sans-serif;
+  --font-display: 'Unbounded Variable', system-ui, sans-serif;
+  --font-body: 'Manrope Variable', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: var(--bg); }
@@ -450,3 +450,11 @@ a.c-card:hover { border-color: rgba(238,58,36,.5); transform: translateY(-4px); 
 .sold-info dl div { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 14.5px; }
 .sold-info dt { color: var(--muted); } .sold-info dd { text-align: right; font-weight: 500; word-break: break-all; }
 @media (max-width: 860px) { .teaser { grid-template-columns: 1fr; gap: 24px; } .sold-card { grid-template-columns: 1fr; } .sold-photo { min-height: 240px; } .vin-form { max-width: none; } }
+
+/* Плаваюча кнопка зв’язку */
+.fab { position: fixed; right: 18px; bottom: 18px; z-index: 120; display: flex; flex-direction: column; gap: 10px; }
+.fab-btn { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 10px 30px -8px rgba(0,0,0,.7); transition: transform .3s; }
+.fab-btn:hover { transform: scale(1.08); }
+.fab-tg { background: #229ed9; }
+.fab-ph { background: var(--fire); background-origin: border-box; }
+@media (max-width: 720px) { .fab { right: 12px; bottom: 12px; } .fab-btn { width: 50px; height: 50px; } }

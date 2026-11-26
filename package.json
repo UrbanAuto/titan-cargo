@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "npx serve out",
-    "logos": "node scripts/make-logos.mjs"
+    "logos": "node scripts/make-logos.mjs",
+    "pack": "node scripts/pack-for-domain.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/unbounded": "^5.3.0",
     "gsap": "^3.12.5",
     "lenis": "^1.1.20",
     "next": "^15.1.0",

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import { calculate, ORIGINS, FUELS } from '@/lib/calc';
-import { goTo } from '@/lib/scroll';
+import { contactLink } from '@/lib/contact';
 
 const usd = (n) => '$' + Math.round(n).toLocaleString('uk-UA');
 const YEAR = new Date().getFullYear();
@@ -43,7 +43,8 @@ export default function Calculator() {
             <div className="total-label">Орієнтовна вартість «під ключ»</div>
             <div className="total grad">{usd(r.total)}</div>
             <div className="lines">{r.items.map((i) => <div key={i.k}><span>{i.k}</span><b>{usd(i.v)}</b></div>)}</div>
-            <button className="btn btn-fire" style={{ width: '100%' }} onClick={() => goTo('order')}>Замовити точний розрахунок</button>
+            <a className="btn btn-fire" style={{ width: '100%' }} target="_blank" rel="noopener noreferrer"
+              href={contactLink(`Доброго дня! Хочу точний розрахунок пригону. Країна: ${ORIGINS[s.origin].label}, ціна авто: $${s.price}, рік: ${s.year}, двигун: ${FUELS.find((x) => x.id === s.fuel).label}${s.fuel === 'electric' ? `, батарея ${s.kwh} кВт·год` : `, ${s.volume.toFixed(1)} л`}. Орієнтовно «під ключ»: ${usd(r.total)}.`).href}>Замовити точний розрахунок у менеджера</a>
             <p className="note">Розрахунок орієнтовний; точні суми залежать від лота, порту, курсу та чинних митних ставок.</p>
           </div>
         </div>
